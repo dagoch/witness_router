@@ -8,8 +8,8 @@ var fs = require('fs');
 var url = require('url');
 
 var options = {
-  key: fs.readFileSync('my-key.pem'),
-  cert: fs.readFileSync('my-cert.pem')
+	key: fs.readFileSync('my-key.pem'),
+	cert: fs.readFileSync('my-cert.pem')
 };
 
 var httpsServer = https.createServer(options, requestHandler);
@@ -50,30 +50,33 @@ var request = require('request');
 var keys = require('./keys.js');
 
 var twitter_client = new twitter({
-  consumer_key: keys.consumer_key,
-  consumer_secret: keys.consumer_secret,
-  access_token_key: keys.access_token_key,
-  access_token_secret: keys.access_token_secret
+	consumer_key: keys.consumer_key,
+	consumer_secret: keys.consumer_secret,
+	access_token_key: keys.access_token_key,
+	access_token_secret: keys.access_token_secret
 });
 
 function searchTweets(){
-	twitter_client.stream('statuses/filter', {track: tags[0]}, 
-		function(stream) {
-  			stream.on('data', function(tweet) {
-    				//console.log(tweet);
-				
-				if (tweet.text.indexOf(tag[1]) != -1 && tweet.text.indexOf(tag[2]) != -1) 
-				{
-					console.log("Send SMS: " + tweet.text);
-					sendSMS(tweet.text);
-				}
-  			});
+	for (var h = 0; h < hashtags.length; h++) {
+		twitter_client.stream('statuses/filter', {track: hashtags[h].hashtag}, 
+			function(stream) {
+				stream.on('data', function(tweet) {    			
+					console.log(tweet);
+					for (var t = 0; t < twitterUsers.length; t++) {
+						if (tweet.screen_name == twitterUsers[t].username) {
+							console.log("Send SMS: " + tweet.text);
+							sendSMS(tweet.text);
+							break;
+						}
+					}
+				});
  
-  			stream.on('error', function(error) {
-    				throw error;
-  			});
-		}
-	);
+				stream.on('error', function(error) {
+					throw error;
+				});
+			}
+		);
+	}
 }
 
 var twilio = require('twilio');
@@ -81,9 +84,9 @@ var twilioNumber = keys.twilio_number;
 var twilio_client = new twilio.RestClient(keys.twilio_account_sid, keys.twilio_auth_token);
 
 function sendSMS(message) {
-	for (var i = 0; i < phonenumbers.length; i++) {
+	for (var i = 0; i < smsUsers.length; i++) {
 		twillio_client.sms.messages.create({
-			to: phonenumbers[i],
+			to: smsUsers[i].phonenumber,
 			from: twilioNumber,
 			body: message
 		}, function(error, message) {
@@ -94,23 +97,64 @@ function sendSMS(message) {
 				console.log('Message sent on:');
 				console.log(message.dateCreated);
 			} else {
-				console.log('Oops! There was an error.');
-			console.log(error);
+				console.log('Oops! There was an error:');
+				console.log(error);
 			}
 		});
 	}
 }
 
-mongoose = require('mongoose');
-var uri = 'mongodb://'+keys.username:keys.password+"@"keys.mongolabs_uri;
-db = mongoose.connect(uri);
+var mongoose = require('mongoose');
+var uri = "mongodb://"+keys.username+":"+keys.password+"@"+keys.mongolabs_uri;
+// var db = mongoose.connect(uri);
 
-// http://mongoosejs.com/docs/guide.html
-var tags = ['#tag1', '#tag2', '#tag3'];
-var phonenumbers = ['+12125551212'];
+var hashtagsSchema = mongoose.Schema({
+    hashtag: String
+});
+
+var smsUsersSchema = mongoose.Schema({
+    phonenumber: String,
+    first_name: String,
+    last_name: String
+});
+
+var twitterUsersSchema = mongoose.Schema({
+	username: String,
+    first_name: String,
+    last_name: String
+});
+
+var hashtagsModel = mongoose.model('hashtag', hashtagsSchema);
+var smsUsersModel = mongoose.model('smsUsers', smsUsersSchema);
+var twitterUsersModel = mongoose.model('twitterUsers', twitterUsersSchema);
+
+var hashtags = keys.hashtags;
+var smsUsers = keys.smsUsers;
+var twitterUsers = keys.twitterUsers;
+
+// hashtagsModel.find(function (err, foundHashtags) {
+// 	if (err) return console.error(err);
+// 	console.log(foundHashtags);
+// 	hastags = foundHashtags;
+// 
+// 	smsUsersModel.find(function (err, foundSMSUsers) {
+// 		if (err) return console.error(err);
+// 		console.log(foundSMSUsers);
+// 		smsUsers = foundSMSUsers;
+// 
+// 		twitterUsersModel.find(function (err, foundTwitterUsers) {
+// 			if (err) return console.error(err);
+// 			console.log(foundTwitterUsers);
+// 			twitterUsers = foundTwitterUsers;
+// 
+// 			// Find everything, then searchTweets			
+// 			searchTweets();
+// 
+// 		});
+// 	});
+// });
 
 searchTweets();
-
 
 
 
