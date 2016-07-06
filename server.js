@@ -63,7 +63,7 @@ function searchTweets(){
 				stream.on('data', function(tweet) {    			
 					console.log(tweet);
 					for (var t = 0; t < twitterUsers.length; t++) {
-						if (tweet.screen_name == twitterUsers[t].username) {
+						if (tweet.user.screen_name == twitterUsers[t].username) {
 							console.log("Send SMS: " + tweet.text);
 							sendSMS(tweet.text);
 							break;
@@ -85,7 +85,7 @@ var twilio_client = new twilio.RestClient(keys.twilio_account_sid, keys.twilio_a
 
 function sendSMS(message) {
 	for (var i = 0; i < smsUsers.length; i++) {
-		twillio_client.sms.messages.create({
+		twilio_client.sms.messages.create({
 			to: smsUsers[i].phonenumber,
 			from: twilioNumber,
 			body: message
