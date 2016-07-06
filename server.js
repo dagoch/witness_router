@@ -57,17 +57,25 @@ var twitter_client = new twitter({
 });
 
 function searchTweets(){
-	for (var h = 0; h < hashtags.length; h++) {
-		twitter_client.stream('statuses/filter', {track: hashtags[h].hashtag}, 
+// 	for (var h = 0; h < hashtags.length; h++) {
+		twitter_client.stream('statuses/filter', {track: keys.twitterKey.hashtag},
 			function(stream) {
 				stream.on('data', function(tweet) {    			
 					console.log(tweet);
-					for (var t = 0; t < twitterUsers.length; t++) {
-						if (tweet.user.screen_name == twitterUsers[t].username) {
-							console.log("Send SMS: " + tweet.text);
-							sendSMS(tweet.text);
-							break;
+					
+					// Search hashtags first
+					for (var h = 0; h < hashtags.length; h++) {
+						if (tweet.text.indexOf(hashtags[h].hashtag) !== -1) {
+							// Check users
+							for (var t = 0; t < twitterUsers.length; t++) {
+								if (tweet.user.screen_name == twitterUsers[t].username) {
+									console.log("Send SMS: " + tweet.text);
+									sendSMS(tweet.text);
+									break;
+								}
+							}
 						}
+						break;
 					}
 				});
  
@@ -76,7 +84,7 @@ function searchTweets(){
 				});
 			}
 		);
-	}
+// 	}
 }
 
 var twilio = require('twilio');
