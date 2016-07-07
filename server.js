@@ -63,21 +63,23 @@ function searchTweets(){
 		twitter_client.stream('statuses/filter', {track: keys.twitterKey.hashtag},
 			function(stream) {
 				stream.on('data', function(tweet) {    			
-					console.log(tweet);
+					console.log("Found " + tweet.text + " from: " + tweet.user.screen_name);
 					
 					// Search hashtags first
 					for (var h = 0; h < hashtags.length; h++) {
 						if (tweet.text.indexOf(hashtags[h].hashtag) !== -1) {
+							console.log("Found " + hashtags[h].hashtag);
 							// Check users
 							for (var t = 0; t < twitterUsers.length; t++) {
-								if (tweet.user.screen_name == twitterUsers[t].username) {
+								if (tweet.user.screen_name.indexOf(twitterUsers[t].username) !== -1) {
+									console.log("Found " + tweet.user.screen_name);
 									console.log("Send SMS: " + tweet.text);
 									sendSMS(tweet.text);
 									break;
 								}
 							}
+							break;
 						}
-						break;
 					}
 				});
  
