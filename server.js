@@ -44,6 +44,8 @@ function requestHandler(req, res) {
 	);
 }
 
+//////////////////////
+
 var twitter = require('twitter')
 var request = require('request');
 
@@ -87,6 +89,8 @@ function searchTweets(){
 // 	}
 }
 
+////////////////////////
+
 var twilio = require('twilio');
 var twilioNumber = keys.twilio_number;
 var twilio_client = new twilio.RestClient(keys.twilio_account_sid, keys.twilio_auth_token);
@@ -111,6 +115,40 @@ function sendSMS(message) {
 		});
 	}
 }
+
+///////////////////////
+
+// var FB = require('fb');
+// 
+// FB.api('oauth/access_token', {
+//     client_id: keys.fb_appID,
+//     client_secret: keys.fb_secret,
+//     grant_type: 'client_credentials'
+// }, function (res) {
+//     if(!res || res.error) {
+//         console.log(!res ? 'error occurred' : res.error);
+//         return;
+//     }
+// 
+//     var accessToken = res.access_token;
+// 	//FB.setAccessToken(accessToken);
+// 
+// 	FB.api('me/friends', {
+//         fields:         'name,picture',
+//         limit:          250,
+//         access_token:   accessToken
+//     }, function (res) {
+// 	  if(!res || res.error) {
+// 	   console.log(!res ? 'error occurred' : res.error);
+// 	   return;
+// 	  }
+// 	  console.log(res);
+// 	});
+// });
+
+
+
+//////////////////////
 
 var mongoose = require('mongoose');
 var uri = "mongodb://"+keys.username+":"+keys.password+"@"+keys.mongolabs_uri;
