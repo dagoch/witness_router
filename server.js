@@ -105,11 +105,7 @@ function sendSMS(message) {
 			body: message
 		}, function(error, message) {
 			if (!error) {
-				console.log('Success! The SID for this SMS message is:');
-				console.log(message.sid);
-
-				console.log('Message sent on:');
-				console.log(message.dateCreated);
+				console.log("Sent " + message.sid + " on " + message.dateCreated);
 			} else {
 				console.log('Oops! There was an error:');
 				console.log(error);
