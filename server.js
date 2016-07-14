@@ -145,7 +145,74 @@ function sendSMS(message) {
 // });
 
 
+//////////////////////
 
+
+var access_token = "EAACEdEose0cBAMrvdwfgkG74iip9lztpYYSh2nzafPixCSZA9hd5lZBap7tSZBjjAvLEjwdXOIC9xoLt2bPw7FTwQHrbsZBtGCDrcrLeaNCZBCTNr2VzqD99TR9UxCA5xQaZBfBDkOwzBNMDrxO0PH2VYyyfsbZCYtbZBDzLXroh7gZDZD";
+
+var graph = require('fbgraph');
+graph.setAccessToken(access_token);
+
+//     graph.extendAccessToken({
+//         "access_token":    access_token
+//       , "client_id":      keys.fb_appID
+//       , "client_secret":  keys.fb_secret
+//     }, function (err, facebookRes) {
+//        console.log(facebookRes);
+//     });
+
+graph.get("10103534756730979", {fields: "feed"}, function(err, res) {
+  if (err) console.log(err);
+  console.log(res); 
+});
+
+// graph.extendAccessToken({
+// 	"client_id":     keys.fb_appID
+//   , "client_secret":  keys.fb_secret
+// }, function (err, facebookRes) {
+//    console.log(facebookRes);
+// });
+
+
+//////////
+// RAW FB WITH APP TOKEN
+// 
+/*
+https://developers.facebook.com/docs/graph-api/using-graph-api#search
+
+GET graph.facebook.com
+  /search?
+    q=vanevery&
+    type=user
+
+*/
+//
+//         var params = {
+//             hostname: 'graph.facebook.com',
+//             port: 443,
+// ///////////
+// // WITH APPLICATION AUTHENTICATION
+// // GIVES ME USER INFORMATION 	path: "/687864578?access_token=" + keys.fb_appID + "|" + keys.fb_secret,
+// // GIVES ME ID ONLY path: "/v2.6/803824?fields=feed&access_token=" + keys.fb_appID + "|" + keys.fb_secret,
+// // GIVES ME EMPTY DATA	path: "/v2.6/803824/feed?access_token=" + keys.fb_appID + "|" + keys.fb_secret,
+// // DOESN'T work on Individuals           path: "/search?q=vanevery&type=user" + "&access_token=" + keys.fb_appID + "|" + keys.fb_secret,
+// // WORKS for PAGES			path: "/obscuracam/feed?access_token=" + keys.fb_appID + "|" + keys.fb_secret,
+// ///////////
+//             method: 'GET'
+//         };
+// 
+// 		https.get(params, function (response) {
+// 			var str = "";
+// 
+// 			response.on('data', function (chunk) {
+// 				str += chunk;
+// 			});
+// 
+// 			response.on('end', function () {
+// 				console.log(str);
+// 			});
+// 		});
+// 
 //////////////////////
 
 var mongoose = require('mongoose');
@@ -198,7 +265,7 @@ var twitterUsers = keys.twitterUsers;
 // 	});
 // });
 
-searchTweets();
+//searchTweets();
 
 
 
