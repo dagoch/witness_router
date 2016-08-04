@@ -16,8 +16,15 @@ var fb_scope = keys.fb_scope;
 
 var graph = require('fbgraph');
 
+var lastFbPostId = 0;
 var datastore = require('nedb');
 var db = new datastore({filename: "facebookstatus.db", autoload: true});
+db.find({}).sort({ date: -1 }).limit(1).exec(function (err, docs) {
+	if (docs.length == 1) {
+		lastFbPostId = docs[0].postId;
+	} 
+});
+
 
 // Create a JavaScript Object with data to store
 // var datatosave = {
@@ -150,11 +157,15 @@ function runFeedMonitor() {
 		  //console.log(res);
 		  // Loop through
 		  if (res.feed && res.feed.data) {
+			var foundLast = false;
+
+			if (lastFbPostId == 0) {		
+				foundLast = true;
+			}
 		    for (var i = 0; i < res.feed.data.length; i++) {
-				
 				// If we don't already have id
-				if (previousPosts.indexOf(res.feed.data[i].id) > -1) {
-				
+				//if (previousPosts.indexOf(res.feed.data[i].id) > -1) {
+				if (foundLast) {
 					// Get id, message, and links
 					graph.get(res.feed.data[i].id, {fields: "id, message, link"}, function(err, res) {
 						if (err) console.log(err);
@@ -179,7 +190,17 @@ function runFeedMonitor() {
 // 						}
 						
 					});
+
+					var datatosave = {date: Date.now(), postId: res.feed.data[i].id};
+					db.insert(datatosave, function (err, newDocs) {
+						console.log("err: " + err);
+						console.log("newDocs: " + newDocs);
+					});
 					
+				} else {
+                        		if (res.feed.data[i].id == lastFbPostId) {
+                                		foundLast = true;
+                        		}
 				}
 		    } 
 		  }
