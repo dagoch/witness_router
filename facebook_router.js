@@ -19,10 +19,12 @@ var graph = require('fbgraph');
 var lastFbPostId = 0;
 var datastore = require('nedb');
 var db = new datastore({filename: "facebookstatus.db", autoload: true});
-db.find({}).sort({ date: -1 }).limit(1).exec(function (err, docs) {
+db.find({}).sort({ ts: -1 }).limit(1).exec(function (err, docs) {
 	if (docs.length == 1) {
 		lastFbPostId = docs[0].postId;
-	} 
+	}
+	
+	console.log("lastFbPostId: " + lastFbPostId);
 });
 
 
@@ -163,12 +165,17 @@ function runFeedMonitor() {
 				foundLast = true;
 			}
 		    for (var i = 0; i < res.feed.data.length; i++) {
+
+		    	console.log(res.feed.data[i].id);
+		    
 				// If we don't already have id
 				//if (previousPosts.indexOf(res.feed.data[i].id) > -1) {
 				if (foundLast) {
 					// Get id, message, and links
 					graph.get(res.feed.data[i].id, {fields: "id, message, link"}, function(err, res) {
 						if (err) console.log(err);
+						
+						console.log("good");
 						
 						console.log(res);
 						
@@ -191,16 +198,21 @@ function runFeedMonitor() {
 						
 					});
 
-					var datatosave = {date: Date.now(), postId: res.feed.data[i].id};
+					
+					lastFbPostId = res.feed.data[i].id;
+
+					var datatosave = {ts: Date.now(), postId: res.feed.data[i].id};
 					db.insert(datatosave, function (err, newDocs) {
-						console.log("err: " + err);
-						console.log("newDocs: " + newDocs);
+						if (err) console.log("err: " + err);
+						//console.log("newDocs: " + newDocs);
 					});
 					
 				} else {
-                        		if (res.feed.data[i].id == lastFbPostId) {
-                                		foundLast = true;
-                        		}
+					console.log("skipping");
+					if (res.feed.data[i].id == lastFbPostId) {
+							console.log("it's last");
+							foundLast = true;
+					}
 				}
 		    } 
 		  }
