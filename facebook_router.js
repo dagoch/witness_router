@@ -16,16 +16,39 @@ var fb_scope = keys.fb_scope;
 
 var graph = require('fbgraph');
 
-var firebase = require("firebase");
-firebase.initializeApp({
-  serviceAccount: "WitnessLiveRouter-8ac604472b17.json",
-  databaseURL: "https://witness-live-router.firebaseio.com"
-});
-var db = firebase.database();
-var ref = db.ref("/users");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
-});
+var datastore = require('nedb');
+var db = new datastore({filename: "facebookstatus.db", autoload: true});
+
+// Create a JavaScript Object with data to store
+// var datatosave = {
+// 	name: "Shawn",
+// 	message: "Hello world"
+// };
+// 		
+// Insert the data into the database
+// db.insert(datatosave, function (err, newDocs) {
+// 	console.log("err: " + err);
+// 	console.log("newDocs: " + newDocs);
+// });
+// 
+// Find all of the existing docs in the database
+// db.find({}, function(err, docs) {
+// 	Loop through the results, send each one as if it were a new chat message
+// 	for (var i = 0; i < docs.length; i++) {
+// 		console.log(docs[i].name + " " + docs[i].message);
+// 	}
+// });
+
+// var firebase = require("firebase");
+// firebase.initializeApp({
+//   serviceAccount: "WitnessLiveRouter-8ac604472b17.json",
+//   databaseURL: "https://witness-live-router.firebaseio.com"
+// });
+// var db = firebase.database();
+// var ref = db.ref("/users");
+// ref.once("value", function(snapshot) {
+//   console.log(snapshot.val());
+// });
 
 var http = require('http');
 var https = require('https');
@@ -119,9 +142,6 @@ function requestHandler(req, res) {
 	}
 }
 
-var previousPosts = [];
-var hashtags = ["#test","#anothertest"];
-
 function runFeedMonitor() {
 	setInterval(function() {
 		// Get the feed
@@ -140,6 +160,24 @@ function runFeedMonitor() {
 						if (err) console.log(err);
 						
 						console.log(res);
+						
+// 						Search hashtags first
+// 						for (var h = 0; h < keys.hashtags.length; h++) {
+// 							if (tweet.text.indexOf(keys.hashtags[h].hashtag) !== -1) {
+// 							console.log("Found " + keys.hashtags[h].hashtag);
+// 						
+// 								Check users
+// 								for (var t = 0; t < keys.twitterUsers.length; t++) {
+// 									if (tweet.user.screen_name.indexOf(keys.twitterUsers[t].username) !== -1) {
+// 									console.log("Found " + tweet.user.screen_name);
+// 										send(tweet);
+// 										break;
+// 									}
+// 								}
+// 								break;
+// 							}
+// 						}
+						
 					});
 					
 				}
