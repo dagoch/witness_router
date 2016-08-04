@@ -18,7 +18,7 @@ function searchTweets(){
 				
 				// Search hashtags first
 				for (var h = 0; h < keys.hashtags.length; h++) {
-					if (tweet.text.indexOf(keys.hashtags[h].hashtag) !== -1) {
+					if (tweet.text.indexOf(keys.hashtag_char + keys.hashtags[h].hashtag) !== -1) {
 //						console.log("Found " + keys.hashtags[h].hashtag);
 						
 						// Check users
