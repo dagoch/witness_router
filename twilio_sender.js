@@ -11,9 +11,9 @@ function sendSMS(message) {
 			body: message
 		}, function(error, message) {
 			if (!error) {
-				console.log("Sent " + message.sid + " on " + message.dateCreated);
+				log("Sent " + message.sid + " on " + message.dateCreated);
 			} else {
-				console.log('Oops! There was an error:');
+				log('Twilio Error:');
 				console.log(error);
 			}
 		});
