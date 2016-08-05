@@ -46,19 +46,19 @@ function sendSMS(message) {
 			}
 			
 			if (sendit) {
-				console.log("Sending " + message + " to " + users[i].sms);
-// 				twilio_client.sms.messages.create({
-// 					to: users[i].sms,
-// 					from: twilioNumber,
-// 					body: message
-// 				}, function(error, message) {
-// 					if (!error) {
-// 						log("Sent " + message.sid + " on " + message.dateCreated);
-// 					} else {
-// 						log('Twilio Error:');
-// 						console.log(error);
-// 					}
-// 				});
+				log("Sending " + message + " to " + users[i].sms);
+				twilio_client.sms.messages.create({
+					to: users[i].sms,
+					from: twilioNumber,
+					body: message
+				}, function(error, message) {
+					if (!error) {
+						log("Sent " + message.sid + " on " + message.dateCreated);
+					} else {
+						log('Twilio Error:');
+						console.log(error);
+					}
+				});
 			}
 		}
 	}
