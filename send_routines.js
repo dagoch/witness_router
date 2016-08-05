@@ -1,3 +1,5 @@
+require('./twilio_sender.js');
+
 var firebase = require("firebase");
 
 firebase.initializeApp({
@@ -11,8 +13,6 @@ ref.once("value", function(snapshot) {
   console.log(snapshot.val());
 });
 
-
-require('twilio_sender.js');
 
 function sendDM(message) {
 	for (var i = 0; i < keys.twitterUsers.length; i++) {

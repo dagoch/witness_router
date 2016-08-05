@@ -1,3 +1,4 @@
+var keys = require('./keys.js');
 
 var twilio = require('twilio');
 var twilioNumber = keys.twilio_number;
@@ -19,6 +20,11 @@ function sendSMS(message) {
 		});
 	}
 }
+
+function log(message) {
+	console.log(Date.now() + " " + message);
+}
+
 
 
 

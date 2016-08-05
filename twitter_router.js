@@ -42,6 +42,11 @@ function searchTweets(){
 	);
 }
 
+function log(message) {
+	console.log(Date.now() + " " + message);
+}
+
+
 function send(tweet) {
 	//console.log(tweet);
 	retweet(tweet);
