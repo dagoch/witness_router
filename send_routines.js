@@ -60,7 +60,8 @@ function log(message) {
 
 module.exports = { 
 	retweet: retweet, 
-	sendDM: sendDM 
+	sendDM: sendDM,
+	tweet: tweet
 };
 
 
