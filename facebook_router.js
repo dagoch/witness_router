@@ -181,7 +181,7 @@ var twilio = require('./twilio_sender.js');
 function send(message) {
 	log("Sending: " + message);
 	sender.tweet(message);
-	sender.sendDM(message);
+	//sender.sendDM(message);
 	twilio.sendSMS(message);
 }
 
