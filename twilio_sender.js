@@ -4,6 +4,9 @@ var twilio = require('twilio');
 var twilioNumber = keys.twilio_number;
 var twilio_client = new twilio.RestClient(keys.twilio_account_sid, keys.twilio_auth_token);
 
+var smsUsers = keys.smsUsers;
+
+//function sendSMS(message, smsUsers)
 function sendSMS(message) {
 	for (var i = 0; i < smsUsers.length; i++) {
 		twilio_client.sms.messages.create({
@@ -25,6 +28,7 @@ function log(message) {
 	console.log(Date.now() + " " + message);
 }
 
+module.exports = { sendSMS: sendSMS };
 
 
 

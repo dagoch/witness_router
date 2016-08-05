@@ -2,7 +2,9 @@ var twitter = require('twitter')
 var request = require('request');
 
 var keys = require('./keys.js');
-require('./send_routines.js');
+
+var sender = require('./send_routines.js');
+var twilio = require('./twilio_sender.js');
 
 var twitter_client = new twitter({
 	consumer_key: keys.consumer_key,
@@ -10,6 +12,19 @@ var twitter_client = new twitter({
 	access_token_key: keys.access_token_key,
 	access_token_secret: keys.access_token_secret
 });
+
+var firebase = require("firebase");
+
+firebase.initializeApp({
+  serviceAccount: "WitnessLiveRouter-8ac604472b17.json",
+  databaseURL: "https://witness-live-router.firebaseio.com"
+});
+
+var db = firebase.database();
+var ref = db.ref("/users");
+// ref.once("value", function(snapshot) {
+//   console.log(snapshot.val());
+// });
 
 function searchTweets(){
 	twitter_client.stream('statuses/filter', {track: keys.twitterKey.hashtag},
@@ -49,9 +64,9 @@ function log(message) {
 
 function send(tweet) {
 	//console.log(tweet);
-	retweet(tweet);
-	sendDM(tweet.text);
-	sendSMS(tweet.text);
+	sender.retweet(tweet);
+	sender.sendDM(tweet.text);
+	twilio.sendSMS(tweet.text);
 }
 
 
