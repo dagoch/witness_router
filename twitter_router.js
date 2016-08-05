@@ -13,18 +13,6 @@ var twitter_client = new twitter({
 	access_token_secret: keys.access_token_secret
 });
 
-var firebase = require("firebase");
-
-firebase.initializeApp({
-  serviceAccount: "WitnessLiveRouter-8ac604472b17.json",
-  databaseURL: "https://witness-live-router.firebaseio.com"
-});
-
-var db = firebase.database();
-var ref = db.ref("/users");
-// ref.once("value", function(snapshot) {
-//   console.log(snapshot.val());
-// });
 
 function searchTweets(){
 	twitter_client.stream('statuses/filter', {track: keys.twitterKey.hashtag},
@@ -65,7 +53,7 @@ function log(message) {
 function send(tweet) {
 	//console.log(tweet);
 	sender.retweet(tweet);
-	sender.sendDM(tweet.text);
+	//sender.sendDM(tweet.text);
 	twilio.sendSMS(tweet.text);
 }
 
