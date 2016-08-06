@@ -42,6 +42,10 @@ function retweet(tweet) {
 }
 
 function tweet(message) {
+	if (message.length >= 130) { 
+		message = message.substr(0,130);
+	}
+	
 	twitter_client.post('statuses/update.json', {status: message},
 		function(error, tweet, response) {
 		  if (error) {
