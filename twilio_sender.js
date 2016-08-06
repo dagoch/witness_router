@@ -30,6 +30,10 @@ function sendSMS(message) {
 		}
 	}	
 
+	if (message.length >= 150) { 
+		message = message.substr(0,150);
+	}
+
 	// Loop through the users
 	for (var i = 0; i < users.length; i++) {
 		
