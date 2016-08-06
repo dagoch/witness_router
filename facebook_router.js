@@ -162,8 +162,8 @@ function runFeedMonitor() {
 								var message = "";
 								if (res.link) message = res.link + " ";
 								message += res.message;
-								if (message.length > 140) { 
-									message = message.substr(0,140);
+								if (message.length >= 140) { 
+									message = message.substr(0,139);
 								}
 								send(message);
 								break;
