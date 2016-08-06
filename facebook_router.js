@@ -159,8 +159,12 @@ function runFeedMonitor() {
 						for (var h = 0; h < keys.hashtags.length; h++) {
 							if (res.message.indexOf(keys.hashtag_char + keys.hashtags[h].hashtag) !== -1) {
 								//log("Found: " + keys.hashtags[h].hashtag);
-								var message = res.message;
-								if (res.link) message = message + " " + res.link;
+								var message = "";
+								if (res.link) message = res.link + " ";
+								message += res.message;
+								if (message.length > 140) { 
+									message = message.substr(0,140);
+								}
 								send(message);
 								break;
 							}
